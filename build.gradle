@@ -1,0 +1,81 @@
+defaultTasks 'clean','test','aggregate'
+
+apply plugin: 'java'
+//apply plugin: 'net.serenity-bdd.aggregator'
+
+group 'org.automationserenity'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+//buildscript {
+//    project.ext {
+//        serenityVersion = '2.3.12'
+//    }
+//    repositories {
+//        mavenLocal()
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath('net.serenity-bdd:serenity-gradle-plugin:' + serenityVersion)
+//    }
+//}
+
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:4.1.14")
+    }
+}
+
+apply plugin : 'net.serenity-bdd.serenity-gradle-plugin'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext {
+    slf4jVersion = '1.7.7'
+    serenityCoreVersion = '2.3.12'
+    junitVersion = '4.13'
+    assertJVersion = '3.8.0'
+    logbackVersion = '1.2.3'
+}
+
+dependencies {
+
+    testRuntimeOnly  'org.junit.jupiter:junit-jupiter:5.10.3'
+    testImplementation 'net.serenity-bdd:serenity-core:4.1.14'
+// https://mvnrepository.com/artifact/net.serenity-bdd/serenity-gradle-plugin
+   // implementation 'net.serenity-bdd:serenity-gradle-plugin:4.0.30'
+
+    // Serenity JUnit Integration
+    testImplementation 'net.serenity-bdd:serenity-junit:4.1.14'
+
+    // Serenity Cucumber Integration
+    testImplementation 'net.serenity-bdd:serenity-cucumber:4.1.14' // For Cucumber 6+ integration
+
+    // https://mvnrepository.com/artifact/net.serenity-bdd/serenity-rest-assured
+    implementation 'net.serenity-bdd:serenity-rest-assured:4.1.14'
+
+}
+
+//test {
+//    testLogging.showStandardStreams = true
+//    systemProperties System.getProperties()
+//}
+
+test {
+   // useJUnitPlatform()
+    testLogging.showStandardStreams = true
+}
+
+gradle.startParameter.continueOnFailure = true
+
+//test.finalizedBy(aggregate)
