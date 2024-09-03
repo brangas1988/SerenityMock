@@ -1,0 +1,286 @@
+<html lang='en'><head><link href='prism/prism.css' rel='stylesheet' /></head><body><script src='prism/prism.js'></script><body><div><pre><code class='language-html'>&lt;html data-adblockkey="MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANDrp2lz7AOmADaN8tA50LsWcjLFyQFcb/P2Txc58oYOeILb3vBw7J6f4pamkAQVSQuqYsKx3YzdUHCvbVZvFUsCAwEAAQ==_zVYo6qcJMK8zIKqWBl0O9caNUf3nidd1mSywIm40hcE4HPdAhneN/NCDd5rfzBv9+fF00GzCnExVinvz1/y4yw==" lang="en" style="background: #2B2B2B;"&gt;<br/>
+ &lt;head&gt;<br/>
+  &lt;meta charset="utf-8"&gt;<br/>
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;<br/>
+  &lt;link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC"&gt;<br/>
+  &lt;link rel="preconnect" href="https://www.google.com" crossorigin=""&gt;<br/>
+  &lt;title&gt;discver.com&lt;/title&gt;<br/>
+  &lt;meta name="description" content="See relevant content for discver.com"&gt;<br/>
+  &lt;style&gt;* {<br/>
+  font-smoothing: antialiased;<br/>
+  -webkit-font-smoothing: antialiased;<br/>
+  -moz-osx-font-smoothing: grayscale;<br/>
+}<br/>
+<br/>
+html, body {<br/>
+  width: 100%;<br/>
+  margin: 0;<br/>
+}<br/>
+<br/>
+html {<br/>
+  background-color: #2B2B2B;<br/>
+  height: 100%;<br/>
+}<br/>
+<br/>
+body {<br/>
+  min-height: 90%;<br/>
+  font-family: Arial, sans-serif;<br/>
+  letter-spacing: 1.2px;<br/>
+  color: #ccc;<br/>
+  text-align: center;<br/>
+}<br/>
+<br/>
+/* App Target - This starts hidden until we apply a class to "activate" it */<br/>
+<br/>
+#target {<br/>
+  opacity: 0;<br/>
+  visibility: hidden;<br/>
+}<br/>
+<br/>
+/* Status Messages - These are displayed when we are not rendering ad blocks or Related Search */<br/>
+<br/>
+#pk-status-message {<br/>
+  height: 100vh;<br/>
+  width: 100%;<br/>
+  display: flex;<br/>
+  flex-direction: column;<br/>
+  align-items: center;<br/>
+  justify-content: center;<br/>
+}<br/>
+<br/>
+/* Sales Box - Default State */<br/>
+<br/>
+#sales-box {<br/>
+  display: block;<br/>
+  width: 100%;<br/>
+  padding: 3px;<br/>
+  text-align: center;<br/>
+  text-decoration: none;<br/>
+  color: #8EABC0;<br/>
+}<br/>
+<br/>
+#sales-box a {<br/>
+  display: block;<br/>
+  width: 100%;<br/>
+  text-decoration: inherit;<br/>
+  color: #8EABC0;<br/>
+  cursor: pointer;<br/>
+}<br/>
+<br/>
+/* Sales Box - Highlighted State */<br/>
+<br/>
+#sales-box.is-highlighted {<br/>
+  position: relative;<br/>
+  z-index: 1;<br/>
+  background: #032438 linear-gradient(to top, #044368 0%, #000 100%);<br/>
+  box-shadow: 0 0 15px 0 #000;<br/>
+  border-bottom: 3px solid #262626;<br/>
+}<br/>
+<br/>
+#sales-box.is-highlighted a {<br/>
+  line-height: 1.3;<br/>
+  display: inline-block;<br/>
+  font-size: 18px;<br/>
+  color: #fff;<br/>
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);<br/>
+  background: none;<br/>
+}<br/>
+<br/>
+/* Ellipsis Loader */<br/>
+<br/>
+.pk-loader {<br/>
+  display: inline-block;<br/>
+  position: relative;<br/>
+  width: 80px;<br/>
+  height: 80px;<br/>
+}<br/>
+<br/>
+.pk-loader div {<br/>
+  position: absolute;<br/>
+  top: 33px;<br/>
+  width: 13px;<br/>
+  height: 13px;<br/>
+  border-radius: 50%;<br/>
+  background: #ccc;<br/>
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);<br/>
+}<br/>
+<br/>
+.pk-loader div:nth-child(1) {<br/>
+  left: 8px;<br/>
+  animation: pk-anim-1 0.6s infinite;<br/>
+}<br/>
+<br/>
+.pk-loader div:nth-child(2) {<br/>
+  left: 8px;<br/>
+  animation: pk-anim-2 0.6s infinite;<br/>
+}<br/>
+<br/>
+.pk-loader div:nth-child(3) {<br/>
+  left: 32px;<br/>
+  animation: pk-anim-2 0.6s infinite;<br/>
+}<br/>
+<br/>
+.pk-loader div:nth-child(4) {<br/>
+  left: 56px;<br/>
+  animation: pk-anim-1 0.6s infinite;<br/>
+  animation-direction: reverse;<br/>
+}<br/>
+<br/>
+.pk-loader-text {<br/>
+  position: fixed;<br/>
+  font-size: 12px;<br/>
+  right: 20px;<br/>
+  bottom: 20px;<br/>
+  font-weight: lighter;<br/>
+}<br/>
+<br/>
+/* Utilities */<br/>
+<br/>
+.pk-message-title {<br/>
+  font-size: 2em;<br/>
+  font-weight: bold;<br/>
+}<br/>
+<br/>
+.pk-page-ready {<br/>
+  opacity: 1 !important;<br/>
+  visibility: visible !important;<br/>
+}<br/>
+<br/>
+@media only screen and (max-width: 600px) {<br/>
+  .hidden-xs {<br/>
+    opacity: 0;<br/>
+    visibility: hidden;<br/>
+  }<br/>
+}<br/>
+<br/>
+/* Animation */<br/>
+<br/>
+@keyframes pk-anim-1 {<br/>
+  0% {<br/>
+      transform: scale(0);<br/>
+  }<br/>
+  100% {<br/>
+      transform: scale(1);<br/>
+  }<br/>
+}<br/>
+<br/>
+@keyframes pk-anim-2 {<br/>
+  0% {<br/>
+      transform: translate(0, 0);<br/>
+  }<br/>
+  100% {<br/>
+      transform: translate(24px, 0);<br/>
+  }<br/>
+}<br/>
+&lt;/style&gt;<br/>
+  &lt;style&gt;:root {<br/>
+  --rswidth: 700px;<br/>
+  --sales-banner-height: 0;<br/>
+}<br/>
+<br/>
+body, html {<br/>
+    font-family: sans-serif, 'Arial';<br/>
+    height: 100%;<br/>
+    background-color: #2B2B2B;<br/>
+    margin: 0 !important;<br/>
+    position: relative;<br/>
+    overflow-x: hidden;<br/>
+}<br/>
+#target {<br/>
+    position: relative;<br/>
+    height: auto;<br/>
+    margin: 0 auto !important;<br/>
+}<br/>
+main {<br/>
+    text-align: center;<br/>
+    margin: 0 auto;<br/>
+    min-height: 100vh;<br/>
+    display: flex;<br/>
+    position: relative;<br/>
+    z-index: 2;<br/>
+    align-items: center;<br/>
+    justify-content: start;<br/>
+    flex-direction: column;<br/>
+}<br/>
+header {<br/>
+    text-align: center;<br/>
+    padding: 45px 0;<br/>
+}<br/>
+header h1 {<br/>
+    font-size: 29px;<br/>
+    color: #ccc;<br/>
+    text-transform: uppercase;<br/>
+    margin: 0;<br/>
+}<br/>
+main section {<br/>
+    flex: 1;<br/>
+    padding: 20px;<br/>
+    width: 100%;<br/>
+    display: flex;<br/>
+    align-items: center;<br/>
+    justify-content: start;<br/>
+    flex-direction: column;<br/>
+}<br/>
+section .ad-block {<br/>
+    width: 100%;<br/>
+    max-width: 500px;<br/>
+    height: 100%;<br/>
+<br/>
+}<br/>
+#rs {<br/>
+    width: 100%;<br/>
+    max-width: var(--rswidth);<br/>
+    min-height: 480px;<br/>
+    height: 100%;<br/>
+}<br/>
+footer {<br/>
+    font-size: 14px;<br/>
+    text-align: center;<br/>
+    padding: 30px 0px;<br/>
+    width: 100%;<br/>
+    color: #555;<br/>
+}<br/>
+footer a {<br/>
+    color: #555;<br/>
+}<br/>
+<br/>
+#sales-banner {<br/>
+    height: var(--sales-banner-height);<br/>
+} <br/>
+<br/>
+#sales-banner.top { <br/>
+    margin-bottom: 8px; <br/>
+} <br/>
+<br/>
+#sales-banner.bottom { <br/>
+    margin-top: 8px; <br/>
+}&lt;/style&gt;<br/>
+ &lt;/head&gt;<br/>
+ &lt;body&gt;<br/>
+  &lt;div id="target" style="opacity: 0" class="pk-page-ready"&gt;<br/>
+   &lt;main&gt;<br/>
+    &lt;header&gt;<br/>
+     &lt;h1&gt;discver.com&lt;/h1&gt;<br/>
+    &lt;/header&gt;<br/>
+    &lt;section&gt;<br/>
+     &lt;div class="ad-block"&gt;<br/>
+      &lt;div class="ads"&gt;<br/>
+       &lt;div id="ad-1"&gt;&lt;/div&gt;<br/>
+       &lt;div id="ad-2"&gt;&lt;/div&gt;<br/>
+      &lt;/div&gt;<br/>
+     &lt;/div&gt;<br/>
+     &lt;div id="rs" style="height: auto;"&gt;<br/>
+      &lt;iframe frameborder="0" marginwidth="0" marginheight="0" allowtransparency="true" scrolling="no" width="100%" name="{&quot;name&quot;:&quot;master-1&quot;,&quot;master-1&quot;:{&quot;container&quot;:&quot;rs&quot;,&quot;styleId&quot;:&quot;3113057640&quot;,&quot;personalizedAds&quot;:false,&quot;channel&quot;:&quot;pid-bodis-gcontrol47,pid-bodis-gcontrol306,pid-bodis-gcontrol425,pid-bodis-gcontrol152,pid-bodis-gcontrol215&quot;,&quot;domainName&quot;:&quot;www.discver.com&quot;,&quot;fexp&quot;:&quot;21404,17301437,17301439,17301442,17301511,17301516,17301266&quot;,&quot;masterNumber&quot;:1,&quot;number&quot;:3,&quot;pubId&quot;:&quot;dp-bodis31_3ph&quot;,&quot;role&quot;:&quot;m&quot;,&quot;hl&quot;:&quot;en&quot;,&quot;ivt&quot;:true,&quot;resultsPageBaseUrl&quot;:&quot;https://www.discver.com/?caf=1&amp;bpt=345&quot;,&quot;columns&quot;:1,&quot;horizontalAlignment&quot;:&quot;left&quot;,&quot;resultsPageQueryParam&quot;:&quot;query&quot;,&quot;terms&quot;:&quot;&quot;,&quot;kw&quot;:&quot;&quot;,&quot;ie&quot;:&quot;UTF-8&quot;,&quot;maxTermLength&quot;:50,&quot;maxTop&quot;:null,&quot;minTop&quot;:null,&quot;oe&quot;:&quot;UTF-8&quot;,&quot;type&quot;:&quot;relatedsearch&quot;,&quot;linkTarget&quot;:&quot;_blank&quot;,&quot;fontSizeTitle&quot;:18,&quot;fontSizeAttribution&quot;:13,&quot;uiOptimize&quot;:false,&quot;domainRegistrant&quot;:&quot;as-drid-2336168993617738&quot;}}" id="master-1" src="https://syndicatedsearch.goog/afs/ads?adtest=off&amp;psid=3113057640&amp;pcsa=false&amp;channel=pid-bodis-gcontrol47%2Cpid-bodis-gcontrol306%2Cpid-bodis-gcontrol425%2Cpid-bodis-gcontrol152%2Cpid-bodis-gcontrol215&amp;client=dp-bodis31_3ph&amp;r=m&amp;hl=en&amp;ivt=1&amp;rpbu=https%3A%2F%2Fwww.discver.com%2F%3Fcaf%3D1%26bpt%3D345&amp;max_radlink_len=50&amp;type=3&amp;uiopt=false&amp;swp=as-drid-2336168993617738&amp;oe=UTF-8&amp;ie=UTF-8&amp;fexp=21404%2C17301437%2C17301439%2C17301442%2C17301511%2C17301516%2C17301266&amp;format=r3&amp;nocache=2641725344140806&amp;num=0&amp;output=afd_ads&amp;domain_name=www.discver.com&amp;v=3&amp;bsl=8&amp;pac=0&amp;u_his=2&amp;u_tz=-300&amp;dt=1725344140807&amp;u_w=1536&amp;u_h=864&amp;biw=1536&amp;bih=730&amp;psw=1536&amp;psh=657&amp;frm=0&amp;uio=-&amp;cont=rs&amp;drt=0&amp;jsid=caf&amp;nfp=1&amp;jsv=667606770&amp;rurl=https%3A%2F%2Fwww.discver.com%2F" allow="attribution-reporting" style="visibility: visible; height: 481px; display: block;" title=""&gt;&lt;/iframe&gt;<br/>
+     &lt;/div&gt;<br/>
+    &lt;/section&gt;<br/>
+    &lt;footer&gt;&lt;span&gt;Copyright 2024&lt;/span&gt; &lt;span style="padding:0px 8px;"&gt;•&lt;/span&gt; &lt;a href="/privacy" target="_blank"&gt;Privacy Policy&lt;/a&gt; &lt;span style="padding:0px 8px;"&gt;•&lt;/span&gt; &lt;a href="/legal" target="_blank"&gt;Legal&lt;/a&gt;<br/>
+     &lt;p id="imprint-text"&gt;&lt;/p&gt;<br/>
+    &lt;/footer&gt;<br/>
+   &lt;/main&gt;<br/>
+  &lt;/div&gt;<br/>
+  &lt;script src="https://partner.googleadservices.com/gampad/cookie.js?domain=www.discver.com&amp;client=partner-dp-bodis31_3ph&amp;product=SAS&amp;callback=__sasCookie&amp;cookie_types=v1%2Cv2"&gt;&lt;/script&gt;<br/>
+  &lt;script&gt;window.park = "eyJ1dWlkIjoiYTE4ZDdkMjQtMjM2OC00NjUxLThmODItYjZlODZkZTc5ZDE1IiwicGFnZV90aW1lIjoxNzI1MzQ0MTM5LCJwYWdlX3VybCI6Imh0dHBzOi8vd3d3LmRpc2N2ZXIuY29tLyIsInBhZ2VfbWV0aG9kIjoiR0VUIiwicGFnZV9yZXF1ZXN0Ijp7fSwicGFnZV9oZWFkZXJzIjp7fSwiaG9zdCI6Ind3dy5kaXNjdmVyLmNvbSIsImlwIjoiMTA4LjIxMy4xMTMuMTA1In0K";&lt;/script&gt;<br/>
+  &lt;script src="/bxJlMjJcr.js"&gt;&lt;/script&gt;<br/>
+  &lt;script type="text/javascript" src="https://www.google.com/adsense/domains/caf.js?abp=1&amp;bodis=true"&gt;&lt;/script&gt;<br/>
+ &lt;/body&gt;<br/>
+&lt;/html&gt;</code></pre></div></body></html>
