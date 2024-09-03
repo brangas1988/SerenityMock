@@ -10,19 +10,6 @@ repositories {
     mavenCentral()
 }
 
-//buildscript {
-//    project.ext {
-//        serenityVersion = '2.3.12'
-//    }
-//    repositories {
-//        mavenLocal()
-//        jcenter()
-//    }
-//    dependencies {
-//        classpath('net.serenity-bdd:serenity-gradle-plugin:' + serenityVersion)
-//    }
-//}
-
 buildscript {
     repositories {
         maven {
