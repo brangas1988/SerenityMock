@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.serenity-bdd:serenity-gradle-plugin:4.2.8"
+        classpath "net.serenity-bdd:serenity-gradle-plugin:4.0.30"
     }
 }
 
@@ -26,7 +26,7 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext {
-    serenity_version = '4.2.8'
+    serenity_version = '4.0.30'
     junit_platform_launcher_version="1.11.3"
     cucumber_junit_platform_engine_version="7.20.1"
     junit_platform_suite_version="1.11.3"
@@ -59,13 +59,16 @@ test {
     maxParallelForks=2
     include '**/parellalRunner.class'
     systemProperties['env']=Project.hasProperty('env')?env:''
-    def tags=System.getProperty('tags')?:''
+    def tags=System.getProperty('tags')?:'@Regression'
     if(!tags.trim()){
         logger.lifecycle("No Tags Provided - RUN ALL")
     }else{
         systemProperty 'cucumber.filter.tags',tags
         logger.lifecycle("Filtering with tags : $tags")
     }
+}
+serenity{
+    requirementsDir="src/test/resources/features"
 }
 
 gradle.startParameter.continueOnFailure = true
