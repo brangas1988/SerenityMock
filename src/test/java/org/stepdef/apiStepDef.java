@@ -4,19 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
+
 import io.restassured.response.Response;
-import net.serenitybdd.annotations.Step;
-import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.core.Serenity;
 import pojoVo.product;
 
 import java.io.File;
 import java.io.IOException;
 
+import static net.serenitybdd.rest.RestRequests.given;
+import static net.serenitybdd.rest.SerenityRest.then;
+
+
 public class apiStepDef {
 
-    @Step
+
     @Given("insert call for products")
     public void insert_call_for_products() {
 
@@ -35,11 +37,11 @@ public class apiStepDef {
         prod.description=string2;
 
         //RestAssured.baseURI="http://localhost:8080/insert";
-        Response res= RestAssured.given().contentType("application/json").
+        Response res= given().contentType("application/json").log().all().
                 body(mapper.writeValueAsString(prod)).when().post("http://localhost:8080/insert");
        // scenario.log(res.asPrettyString());
         System.out.println(res.toString());
-
+        then().log().all();
         if(res.statusCode()==200){
             System.out.println("Success");
         }
