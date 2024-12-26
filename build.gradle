@@ -58,6 +58,14 @@ test {
     useJUnitPlatform()
     maxParallelForks=2
     include '**/parellalRunner.class'
+    systemProperties['env']=Project.hasProperty('env')?env:''
+    def tags=System.getProperty('tags')?:''
+    if(!tags.trim()){
+        logger.lifecycle("No Tags Provided - RUN ALL")
+    }else{
+        systemProperty 'cucumber.filter.tags',tags
+        logger.lifecycle("Filtering with tags : $tags")
+    }
 }
 
 gradle.startParameter.continueOnFailure = true
