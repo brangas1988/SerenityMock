@@ -1,0 +1,91 @@
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+
+public class DBToExcelProcessor {
+    private static final String INPUT_EXCEL = "input.xlsx";
+    private static final String OUTPUT_EXCEL = "output.xlsx";
+    private static final int THREAD_POOL_SIZE = 10;
+
+    public static void main(String[] args) throws Exception {
+        List<String> ids = readExcel(INPUT_EXCEL);  // Step 1: Read Excel
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        
+        // Step 2: Execute 10 parallel DB calls
+        List<CompletableFuture<Map<String, String>>> futures = ids.stream()
+                .map(id -> CompletableFuture.supplyAsync(() -> fetchDataFromDB(id), executor))
+                .collect(Collectors.toList());
+
+        // Wait for all tasks to complete
+        List<Map<String, String>> results = futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+
+        executor.shutdown();  // Shutdown thread pool
+
+        // Step 3: Write consolidated data to Excel
+        writeExcel(results, OUTPUT_EXCEL);
+        System.out.println("Processing completed. Data saved to " + OUTPUT_EXCEL);
+    }
+
+    // 📌 **Step 1: Read IDs from Excel**
+    private static List<String> readExcel(String filePath) throws IOException {
+        List<String> ids = new ArrayList<>();
+        try (FileInputStream fis = new FileInputStream(filePath);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            for (Row row : sheet) {
+                Cell cell = row.getCell(0);
+                if (cell != null) ids.add(cell.getStringCellValue().trim());
+            }
+        }
+        return ids;
+    }
+
+    // 📌 **Step 2: Fetch Data from DB in Parallel**
+    private static Map<String, String> fetchDataFromDB(String id) {
+        Map<String, String> data = new HashMap<>();
+        String query = "SELECT name, age FROM employees WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "user", "pass");
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    data.put("ID", id);
+                    data.put("Name", rs.getString("name"));
+                    data.put("Age", rs.getString("age"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    // 📌 **Step 3: Write Consolidated Data to Excel**
+    private static void writeExcel(List<Map<String, String>> data, String filePath) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(); FileOutputStream fos = new FileOutputStream(filePath)) {
+            Sheet sheet = workbook.createSheet("Consolidated Data");
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Name", "Age"};
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
+
+            int rowIndex = 1;
+            for (Map<String, String> rowData : data) {
+                Row row = sheet.createRow(rowIndex++);
+                row.createCell(0).setCellValue(rowData.getOrDefault("ID", ""));
+                row.createCell(1).setCellValue(rowData.getOrDefault("Name", ""));
+                row.createCell(2).setCellValue(rowData.getOrDefault("Age", ""));
+            }
+
+            workbook.write(fos);
+        }
+    }
+}
